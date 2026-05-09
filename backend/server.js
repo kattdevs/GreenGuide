@@ -25,4 +25,4 @@ res.status(err.status || 500).json({ error: err.message || 'Internal Server Erro
 });
 
 app.listen(PORT, () =>
-console.log(`Server running on http://localhost:\${PORT}`));
+  console.log(`Server running on http://localhost:${PORT}`));
