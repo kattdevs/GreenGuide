@@ -1,65 +1,58 @@
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
+
 export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate('/login');
   }
+
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-brand-900 text-white px-6 py-3 flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-6">
-          <span className="font-bold text-xl text-brand-100">AppName</span>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `text-sm font-medium transition ${
-                isActive ? "text-brand-100" : "text-slate-300 hover:text-white"
-              }`
-            }
-          >
-            Home
-          </NavLink>
-          {/* Admin link is only visible to admins */}
-          {user?.role === "admin" && (
-            <NavLink
-              to="/admin"
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <nav style={{backgroundColor: '#14532D'}} className="text-white px-6 py-4 flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌿</span>
+            <span className="font-bold text-xl text-green-100">GreenGuide</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <NavLink to="/"
               className={({ isActive }) =>
-                `text-sm font-medium transition ${
-                  isActive
-                    ? "text-brand-100"
-                    : "text-slate-300 hover:text-white"
-                }`
-              }
-            >
-              Admin
+                `text-sm font-medium transition ${isActive ? 'text-green-300' : 'text-green-100 hover:text-white'}`}>
+              Browse
             </NavLink>
-          )}
+            {user?.role === 'admin' && (
+              <NavLink to="/admin"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition ${isActive ? 'text-green-300' : 'text-green-100 hover:text-white'}`}>
+                Admin Panel
+              </NavLink>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-green-200">
             {user?.name}
-            <span className="ml-2 bg-brand-500 text-white text-xs x-2 py-0.5 rounded-full capitalize">
+            <span style={{backgroundColor: '#16A34A'}} className="ml-2 text-white text-xs px-2 py-0.5 rounded-full capitalize">
               {user?.role}
             </span>
           </span>
-          <button
-            onClick={handleLogout}
-            className="text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition"
-          >
+          <button onClick={handleLogout}
+            className="text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition border border-white/20">
             Logout
           </button>
         </div>
       </nav>
-      {/* Page content */}
+
       <main className="flex-1 px-4 py-8 max-w-7xl mx-auto w-full">
         <Outlet />
       </main>
-      <footer className="text-center text-xs text-slate-400 py-4 border-t border-slate-200">
-        &copy; {new Date().getFullYear()} FullStack App
+
+      <footer style={{backgroundColor: '#14532D'}} className="text-center text-xs text-green-300 py-4">
+        🌍 GreenGuide — Making South Africa greener, one tip at a time.
       </footer>
     </div>
   );
