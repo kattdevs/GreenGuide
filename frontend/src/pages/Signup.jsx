@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { User, Mail, Lock, Leaf, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Signup() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [busy, setBusy] = useState(false);
   const { signup } = useAuth();
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -16,7 +18,7 @@ export default function Signup() {
     setBusy(true);
     try {
       await signup(form.name, form.email, form.password);
-      toast.success('Welcome to GreenGuide!');
+      toast.success('Welcome to GreenGuide! 🌿');
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Signup failed.');
@@ -25,43 +27,95 @@ export default function Signup() {
     }
   }
 
+  const fields = [
+    { key: 'name',     placeholder: 'Full name',        type: 'text',     Icon: User },
+    { key: 'email',    placeholder: 'Email address',    type: 'email',    Icon: Mail },
+    { key: 'password', placeholder: 'Password',         type: 'password', Icon: Lock },
+    { key: 'confirm',  placeholder: 'Confirm password', type: 'password', Icon: Lock },
+  ];
+
   return (
-    <div style={{background: 'linear-gradient(135deg, #14532D 0%, #16A34A 50%, #22C55E 100%)'}}
-         className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">🌿</div>
-          <h1 className="text-white text-3xl font-bold">GreenGuide</h1>
-          <p className="text-green-200 text-sm mt-2">Join the green movement</p>
-        </div>
-        <div className="bg-white rounded-3xl p-8 shadow-2xl">
-          <h2 className="text-gray-800 text-xl font-bold mb-6 text-center">Create Account</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {[
-              { key: 'name',     label: 'Full Name',        type: 'text',     ph: 'John Doe'       },
-              { key: 'email',    label: 'Email',            type: 'email',    ph: 'you@example.com'},
-              { key: 'password', label: 'Password',         type: 'password', ph: '••••••••'        },
-              { key: 'confirm',  label: 'Confirm Password', type: 'password', ph: '••••••••'        },
-            ].map(({ key, label, type, ph }) => (
-              <div key={key}>
-                <label className="text-gray-700 text-sm font-medium block mb-1">{label}</label>
-                <input type={type} required value={form[key]}
-                  onChange={e => setForm({ ...form, [key]: e.target.value })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:border-transparent"
-                  placeholder={ph} />
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12"
+         style={{ background: 'linear-gradient(135deg, #020c06 0%, #041a0e 50%, #020c06 100%)' }}>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/3 w-96 h-96 rounded-full blur-3xl opacity-15"
+             style={{ background: 'radial-gradient(circle, #10b981, transparent)' }} />
+        <div className="absolute bottom-0 right-1/3 w-80 h-80 rounded-full blur-3xl opacity-10"
+             style={{ background: 'radial-gradient(circle, #14b8a6, transparent)' }} />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}>
+
+          <div className="absolute -inset-px rounded-3xl blur-xl opacity-30"
+               style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }} />
+
+          <div className="relative rounded-3xl p-8 border"
+               style={{
+                 background: 'rgba(2,12,6,0.8)',
+                 backdropFilter: 'blur(32px)',
+                 borderColor: 'rgba(16,185,129,0.15)',
+               }}>
+
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5 border"
+                   style={{
+                     background: 'rgba(16,185,129,0.1)',
+                     borderColor: 'rgba(16,185,129,0.25)',
+                     boxShadow: '0 0 30px rgba(16,185,129,0.15)',
+                   }}>
+                <Leaf size={28} style={{ color: '#34d399' }} />
               </div>
-            ))}
-            <button type="submit" disabled={busy}
-              style={{backgroundColor: '#16A34A'}}
-              className="w-full text-white font-semibold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50 mt-2">
-              {busy ? 'Creating account…' : 'Join GreenGuide'}
-            </button>
-          </form>
-          <p className="text-center text-gray-500 text-sm mt-6">
-            Already have an account?{' '}
-            <Link to="/login" style={{color: '#16A34A'}} className="font-medium hover:underline">Sign in</Link>
-          </p>
-        </div>
+              <h1 className="text-3xl font-bold text-white">Join <span style={{ color: '#34d399' }}>GreenGuide</span></h1>
+              <p className="text-white/40 text-sm mt-2">Start your green journey today</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {fields.map(({ key, placeholder, type, Icon }, i) => (
+                <motion.div key={key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08 }} className="relative">
+                  <Icon size={15} className="absolute left-4 top-1/2 -translate-y-1/2"
+                       style={{ color: 'rgba(255,255,255,0.25)' }} />
+                  <input type={type} required placeholder={placeholder} value={form[key]}
+                    onChange={e => setForm({ ...form, [key]: e.target.value })}
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl text-white text-sm outline-none transition-all"
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      caretColor: '#10b981',
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'rgba(16,185,129,0.5)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                  />
+                </motion.div>
+              ))}
+
+              <motion.button
+                type="submit" disabled={busy}
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full py-3.5 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #10b981, #059669)', boxShadow: '0 8px 32px rgba(16,185,129,0.3)' }}>
+                {busy ? (
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                    className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white" />
+                ) : (
+                  <> Join GreenGuide <ArrowRight size={16} /> </>
+                )}
+              </motion.button>
+            </form>
+
+            <p className="text-center text-white/30 text-sm mt-6">
+              Already have an account?{' '}
+              <Link to="/login" style={{ color: '#34d399' }} className="font-medium hover:text-emerald-300 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
